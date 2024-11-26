@@ -1,9 +1,10 @@
 import './App.css';
+import Loginform from './Loginform';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Login Page!!</h1>
+    <div >
+      <Loginform/>
     </div>
   );
 }
