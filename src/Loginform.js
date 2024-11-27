@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "./loginSlice";
+import { Link } from "react-router-dom";
 
 export default function Loginform() {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const dispatch = useDispatch();
 
   const handleLogin = () => {
-    if (email === 'test@example.com' || password === 'password') {
-      setMessage('Login successful!');
+    if (email === "test@example.com" || password === "password") {
+      dispatch(login({ email }));
+      setMessage("Login successful!");
     } else {
-      setMessage('Invalid email or password');
+      setMessage("Invalid email or password");
     }
   };
 
   const handleSignup = () => {
-    
     if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
+      setMessage("Passwords do not match");
     } else {
-      setMessage('Signup successful! You can now log in.');
+      setMessage("Signup successful! You can now log in.");
       setIsLogin(true);
     }
   };
@@ -29,10 +35,10 @@ export default function Loginform() {
     <div className="container">
       <div className="form-container">
         <div className="form-toggle">
-          <button className={isLogin ? 'active' : ''} onClick={() => setIsLogin(true)}>
+          <button className={isLogin ? "active" : ""} onClick={() => setIsLogin(true)}>
             Login
           </button>
-          <button className={!isLogin ? 'active' : ''} onClick={() => setIsLogin(false)}>
+          <button className={!isLogin ? "active" : ""} onClick={() => setIsLogin(false)}>
             Sign Up
           </button>
         </div>
@@ -55,9 +61,6 @@ export default function Loginform() {
             <a href="#">Forgot Password?</a>
             <button onClick={handleLogin}>Login Here</button>
             {message && <p>{message}</p>}
-            <p>
-              Not a Member? <a href="#" onClick={() => setIsLogin(false)}>Signup Now</a>
-            </p>
           </div>
         ) : (
           <div className="form">
