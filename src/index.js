@@ -7,11 +7,10 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-// Create a custom Material-UI theme
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2', // Default Material-UI blue
+      main: '#1976d2', 
     },
     secondary: {
       main: '#dc004e',
