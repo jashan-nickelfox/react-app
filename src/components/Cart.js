@@ -3,14 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity, removeItem } from "../features/cart/cartSlice";
 import { Box, Typography, List, ListItem, ListItemText, IconButton, Button} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CenterFocusStrong } from "@mui/icons-material";
 
 export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
   const calculateTotal = () =>
-    cartItems.reduce((total, item) => total + item?.price * item?.quantity, 0);
+    cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <Box

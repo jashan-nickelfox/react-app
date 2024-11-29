@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../features/login/loginSlice";
 import { Button, TextField, Box, Typography, Tabs, Tab } from "@mui/material";
+import { Link } from 'react-router-dom';
 
 export default function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -30,8 +31,11 @@ export default function LoginForm() {
       setIsLogin(true);
     }
   };
+ 
+
 
   return (
+    
     <Box
       sx={{
         maxWidth: 400,
@@ -133,6 +137,12 @@ export default function LoginForm() {
               {message}
             </Typography>
           )}
+            <Typography variant="body2" sx={{ mt: 3 }}>
+            <Link to="/gallery" className="gallery-link">
+              Go to Unsplash Gallery
+            </Link>
+          </Typography>
+          
         </Box>
       )}
     </Box>
