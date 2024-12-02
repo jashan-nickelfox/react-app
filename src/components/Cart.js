@@ -1,13 +1,24 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity, removeItem } from "../features/cart/cartSlice";
-import { Box, Typography, List, ListItem, ListItemText, IconButton, Button} from "@mui/material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Button,
+  useTheme,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
+  const theme = useTheme(); // Access the current theme
 
+  // Function to calculate the total cost of items in the cart
   const calculateTotal = () =>
     cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -18,17 +29,18 @@ export default function Cart() {
         mx: "auto",
         mt: 5,
         p: 3,
-        border: "1px solid #ddd",
         borderRadius: 2,
         boxShadow: 3,
-        backgroundColor: "Background"
+        backgroundColor: theme.palette.background.paper, // Dynamically set background color
+        color: theme.palette.text.primary, // Dynamically set text color
       }}
     >
-      <Box display= "flex" justifyContent="center">
-      <Typography variant="h4" gutterBottom>
-        Shopping Cart
-      </Typography>
+      <Box display="flex" justifyContent="center">
+        <Typography variant="h4" gutterBottom>
+          Shopping Cart
+        </Typography>
       </Box>
+
       {cartItems.length === 0 ? (
         <Typography variant="body1">Your cart is empty.</Typography>
       ) : (
@@ -66,7 +78,12 @@ export default function Cart() {
                 </Button>
                 <Typography
                   variant="body1"
-                  sx={{ mx: 1, minWidth: "15px", textAlign: "center" }}
+                  sx={{
+                    mx: 1,
+                    minWidth: "15px",
+                    textAlign: "center",
+                    color: theme.palette.text.primary, // Text color dynamic
+                  }}
                 >
                   {item.quantity}
                 </Typography>
@@ -85,6 +102,7 @@ export default function Cart() {
           ))}
         </List>
       )}
+
       {cartItems.length > 0 && (
         <>
           <Typography variant="h6" sx={{ mt: 2 }}>

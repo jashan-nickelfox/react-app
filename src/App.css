@@ -97,3 +97,9 @@ body {
 .form p.success {
   color: #28a745; /* Green for success */
 }
+
+a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
