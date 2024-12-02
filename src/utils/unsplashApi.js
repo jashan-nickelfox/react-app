@@ -15,7 +15,8 @@ export const searchUnsplashImages = async (query, perPage = 20) => {
       },
     });
     return response.data.results;
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error fetching Unsplash images:', error);
     return [];
   }
