@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../features/login/loginSlice";
-import { Button, TextField, Box, Typography, Tabs, Tab } from "@mui/material";
-import { Link } from 'react-router-dom';
+import {
+  Button,
+  TextField,
+  Box,
+  Typography,
+  Tabs,
+  Tab,
+  Link,
+  useTheme,
+} from "@mui/material";
 
 export default function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,6 +19,7 @@ export default function LoginForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  const theme = useTheme(); // Access the current theme
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
 
@@ -31,21 +40,18 @@ export default function LoginForm() {
       setIsLogin(true);
     }
   };
- 
-
 
   return (
-    
     <Box
       sx={{
         maxWidth: 400,
         mx: "auto",
         mt: 5,
         p: 3,
-        border: "1px solid #ddd",
         borderRadius: 2,
         boxShadow: 3,
-        backgroundColor: "white"
+        backgroundColor: theme.palette.background.paper, // Dynamically use paper background
+        color: theme.palette.text.primary, // Dynamically use text color
       }}
     >
       <Tabs
@@ -137,12 +143,14 @@ export default function LoginForm() {
               {message}
             </Typography>
           )}
-            <Typography variant="body2" sx={{ mt: 3 }}>
-            <Link to="/gallery" className="gallery-link">
+          <Typography variant="body2" sx={{ mt: 3, textAlign: "center" }}>
+            <Link
+              to="/gallery"
+              style={{ textDecoration: "none", color: theme.palette.primary.main }}
+            >
               Go to Unsplash Gallery
             </Link>
           </Typography>
-          
         </Box>
       )}
     </Box>
