@@ -7,7 +7,7 @@ export const searchUnsplashImages = async (query, page = 1, perPage = 20) => {
   try {
     const response = await axios.get(`${UNSPLASH_BASE_URL}/search/photos`, {
       params: {
-        query,page,per_page: perPage,  
+        query, page, per_page: perPage,
       },
       headers: {
         Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,

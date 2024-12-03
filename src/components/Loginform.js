@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../features/login/loginSlice";
-import {
-  Button,
-  TextField,
-  Box,
-  Typography,
-  Tabs,
-  Tab,
-  Link,
-  useTheme,
-} from "@mui/material";
+import { Button, TextField, Box, Typography, Tabs, Tab, useTheme } from "@mui/material";
 
 export default function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -143,14 +134,6 @@ export default function LoginForm() {
               {message}
             </Typography>
           )}
-          <Typography variant="body2" sx={{ mt: 3, textAlign: "center" }}>
-            <Link
-              to="/gallery"
-              style={{ textDecoration: "none", color: theme.palette.primary.main }}
-            >
-              Go to Unsplash Gallery
-            </Link>
-          </Typography>
         </Box>
       )}
     </Box>
