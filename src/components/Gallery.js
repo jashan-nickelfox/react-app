@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { searchUnsplashImages } from "../utils/unsplashApi";
-import {
-  Box,TextField,Button,Grid,Typography,Card,CardMedia,useTheme,} from "@mui/material";
+import { Box, TextField, Button, Grid, Typography, Card, CardMedia, Alert, CircularProgress, useTheme } from "@mui/material";
 
 export default function Gallery() {
   const [query, setQuery] = useState("");
@@ -9,28 +8,55 @@ export default function Gallery() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [pageInput, setPageInput] = useState("");
+
   const theme = useTheme();
-  const itemsPerPage = 12;
+  const itemsPerPage = 20;
 
   const fetchImages = async () => {
-    if (query.trim()) {
-      setIsLoading(true);
+    setIsLoading(true);
+    setError(null);
+
+    try {
       const fetchedImages = await searchUnsplashImages(query, currentPage, itemsPerPage);
-      setImages(fetchedImages.results);
-      setTotalPages(Math.ceil(fetchedImages.total / itemsPerPage));
+
+      if (fetchedImages.results.length === 0) {
+        setError("No results found for your query. Try a different search term.");
+        setImages([]);
+      } else {
+        setImages(fetchedImages.results);
+        setTotalPages(Math.ceil(fetchedImages.total / itemsPerPage));
+      }
+    } catch (err) {
+      console.error("Error fetching Unsplash images:", err);
+      setError("An error occurred while fetching images. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (query.trim()) {
-      fetchImages();
-    }
-  }, [query, currentPage]);
-
   const handleSearch = () => {
+    if (!query.trim()) {
+      setError("Search query cannot be empty.");
+      return;
+    }
     setCurrentPage(1);
+    setPageInput("");
     fetchImages();
+  };
+
+  const handlePageInputChange = (e) => {
+    setPageInput(e.target.value);
+  };
+
+  const handlePageInputSubmit = () => {
+    const pageNumber = parseInt(pageInput, 10);
+    if (!isNaN(pageNumber) && pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    } else {
+      setError(`Please enter a valid page number between 1 and ${totalPages}.`);
+    }
   };
 
   const handleNextPage = () => {
@@ -45,20 +71,27 @@ export default function Gallery() {
     }
   };
 
+  useEffect(() => {
+    if (query.trim()) {
+      fetchImages();
+    }
+  }, [currentPage]);
+
   return (
     <Box
       sx={{
         backgroundColor: theme.palette.background.default,
-        minHeight: "15vh",
+        minHeight: "10vh",
         color: theme.palette.text.primary,
       }}
     >
       <Box p={4}>
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center" mb={2}>
           <Typography variant="h4" gutterBottom>
             Image Searcher
           </Typography>
         </Box>
+
         <Box display="flex" gap={2} mb={4}>
           <TextField
             variant="outlined"
@@ -71,13 +104,23 @@ export default function Gallery() {
             variant="contained"
             color="primary"
             onClick={handleSearch}
-            disabled={!query.trim()}
+            disabled={isLoading}
           >
-            Search
+            {isLoading ? "Searching..." : "Search"}
           </Button>
         </Box>
 
-        {isLoading && <Typography>Loading...</Typography>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 4 }}>
+            {error}
+          </Alert>
+        )}
+
+        {isLoading && (
+          <Box display="flex" justifyContent="center" my={4}>
+            <CircularProgress />
+          </Box>
+        )}
 
         <Grid container spacing={2}>
           {images.map((image) => (
@@ -98,27 +141,50 @@ export default function Gallery() {
           ))}
         </Grid>
 
-        <Box display="flex" justifyContent="center" mt={4}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <Typography sx={{ mx: 2 }}>
-            Page {currentPage} of {totalPages}
-          </Typography>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
-        </Box>
+        {images.length > 0 && (
+          <Box display="flex" justifyContent="center" mt={4} gap={2}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1 || isLoading}
+            >
+              Previous
+            </Button>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography>Page:</Typography>
+              <TextField
+                variant="outlined"
+                size="small"
+                value={pageInput}
+                onChange={handlePageInputChange}
+                placeholder={`${currentPage}`}
+                sx={{ width: "100px" }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePageInputSubmit}
+                disabled={isLoading}
+              >
+                Go
+              </Button>
+            </Box >
+            <Box justifyContent="center" marginTop="8px" >
+              <Typography sx={{ mx: 2 }}>
+                {currentPage} of {totalPages}
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages || isLoading}
+            >
+              Next
+            </Button>
+          </Box>
+        )}
       </Box>
     </Box>
   );
